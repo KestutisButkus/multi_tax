@@ -1,0 +1,20 @@
+{% extends "skaps/base.html" %}
+{% block title %}Edit Customer{% endblock %}
+{% block content %}
+<h2>Edit Customer: {{ customer.full_name }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <h4>Meters</h4>
+    {{ formset.management_form }}
+    {% for subform in formset %}
+        <div class="border p-2 mb-2">
+            {{ subform.as_p }}
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-success">Save changes</button>
+    <a href="{% url 'customers_list' association.id %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

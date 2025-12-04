@@ -1,0 +1,11 @@
+{% extends "skaps/base.html" %}
+{% block title %}Edit Meter{% endblock %}
+{% block content %}
+<h2>Edit Meter for {{ customer.full_name }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="{% url 'customer_dashboard' customer.association.id customer.id %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

@@ -1,0 +1,11 @@
+<h4>Generuoti sąskaitą</h4>
+<form method="get">
+    <select onchange="location = this.value;" class="form-select">
+        <option selected disabled>Pasirinkite periodą</option>
+        {% for p in periods %}
+            <option value="{% url 'generate_invoice' customer.id p.id %}">
+                {{ p.year }}-{{ p.month|add:"0"|slice:"-2" }}
+            </option>
+        {% endfor %}
+    </select>
+</form>

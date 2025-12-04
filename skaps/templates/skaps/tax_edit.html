@@ -1,0 +1,14 @@
+{% extends "skaps/base.html" %}
+{% block title %}Redaguoti mokestį{% endblock %}
+
+{% block content %}
+<h2>Redaguoti: {{ tax.name }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-success">💾 Išsaugoti</button>
+    <a href="{% url 'association_taxes' association_id=tax.association.id %}" class="btn btn-secondary">Atgal</a>
+</form>
+{% endblock %}

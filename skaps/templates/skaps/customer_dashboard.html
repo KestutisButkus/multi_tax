@@ -1,0 +1,75 @@
+{% extends "skaps/base.html" %}
+{% block title %}Customer Dashboard{% endblock %}
+{% block content %}
+    <h2>{{ customer.full_name }}</h2>
+    <p><strong>Email:</strong> {{ customer.email }}</p>
+    <p><strong>Phone:</strong> {{ customer.phone }}</p>
+    <p><strong>Address:</strong> {{ customer.address }}</p>
+    <p><strong>Balance:</strong> {{ customer.balance }}</p>
+
+    <hr>
+    <h4>Meters</h4>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Unit</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for m in meters %}
+            <tr>
+                <td>{{ m.get_meter_type_display }}</td>
+                <td>{{ m.unit }}</td>
+                <td>{{ m.description }}</td>
+                <td>
+                    <a href="{% url 'edit_meter' customer.id m.id %}" class="btn btn-sm btn-primary">Edit</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">No meters defined.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'add_meter' customer.id %}" class="btn btn-success">Pridėti skaitiklį</a>
+
+    <hr>
+    <a href="{% url 'customers_list' customer.association.id %}" class="btn btn-secondary">Back to Customers</a>
+    <h4>Generuoti sąskaitą</h4>
+    <ul>
+        {% for p in periods %}
+            <li>
+                <a href="{% url 'generate_invoice' customer.id p.id %}" class="btn btn-success">
+                    Generuoti sąskaitą už {{ p.year }}-{{ p.month|add:"0"|slice:"-2" }}
+                </a>
+            </li>
+        {% empty %}
+            <li>Nėra periodų su bendrijos mokesčiais</li>
+        {% endfor %}
+    </ul>
+
+
+    <h4>Sąskaitos</h4>
+    <ul>
+        {% for inv in customer.invoices.all %}
+            <li>
+                <a href="{% url 'invoice_detail' customer.id inv.id %}">
+                    {{ inv.number }} – {{ inv.date }} – {{ inv.payable_amount }} €
+                </a>
+            </li>
+        {% empty %}
+            <li>Nėra sąskaitų</li>
+        {% endfor %}
+    </ul>
+    <h2>Add Meter Reading for {{ customer.full_name }}</h2>
+<a href="{% url 'add_meter_reading' customer.id %}" class="btn btn-primary mb-3">
+    Add Meter Reading
+</a>
+
+
+{% endblock %}

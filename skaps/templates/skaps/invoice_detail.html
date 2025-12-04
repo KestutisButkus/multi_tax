@@ -1,0 +1,104 @@
+{% extends "skaps/base.html" %}
+{% block title %}Sąskaita {{ invoice.number }}{% endblock %}
+
+{% block content %}
+    <h2>Sąskaita {{ invoice.number }}</h2>
+    <h5>{{ customer.association }}</h5>
+    <h4>Periodas: {{ invoice.period }}</h4>
+    <p>Klientas: {{ customer.full_name }}</p>
+    <p>Data: {{ invoice.date }}</p>
+
+    <!-- Bendrijos mokesčiai -->
+    <h3>Bendrijos mokesčiai</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Aprašymas</th>
+            <th>Vieneto kaina</th>
+            <th>Suma</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item_data in items_with_footnotes %}
+            {% if not item_data.item.consumed %}
+                <tr>
+                    <td>
+                        {{ item_data.item.description }}
+                        {% if item_data.footnote_number %}
+                            <sup>[{{ item_data.footnote_number }}]</sup>
+                        {% endif %}
+                    </td>
+                    {% if item_data.item.period_tax.tax_type.distribution_type == "by_area" %}
+                        <td>
+                            {{ item_data.item.unit_price|floatformat:2 }} {{ item_data.item.currency }}
+                            × {{ customer.floor_area }} {{ item_data.item.unit }}
+                        </td>
+                    {% else %}
+                        <td>{{ item_data.item.unit_price|floatformat:2 }} {{ item_data.item.currency }}</td>
+                    {% endif %}
+                    <td>{{ item_data.item.total|floatformat:2 }} {{ item_data.item.currency }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Skaitiklių sąnaudos -->
+    <h3>Skaitiklių sąnaudos</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Aprašymas</th>
+            <th>Nuo</th>
+            <th>Iki</th>
+            <th>Suvartota</th>
+            <th>Vieneto kaina</th>
+            <th>Suma</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item_data in items_with_footnotes %}
+            {% if item_data.item.consumed %}
+                <tr>
+                    <td>
+                        {{ item_data.item.period_tax.tax_type.name }}
+                        {% if item_data.footnote_number %}
+                            <sup>[{{ item_data.footnote_number }}]</sup>
+                        {% endif %}
+                    </td>
+                    <td>{{ item_data.item.start_value|floatformat:0 }}</td>
+                    <td>{{ item_data.item.end_value|floatformat:0 }}</td>
+                    <td>{{ item_data.item.consumed|floatformat:0 }} {{ item_data.item.meter.unit_display }}</td>
+                    <td>{{ item_data.item.unit_price|floatformat:2 }} {{ item_data.item.currency }}</td>
+                    <td>{{ item_data.item.total|floatformat:2 }} {{ item_data.item.currency }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Sumos -->
+    <hr>
+    <p><strong>Bendra suma:</strong> {{ invoice.total_amount|floatformat:2 }} {{ invoice.items.first.currency }}</p>
+    <p><strong>Balansas:</strong> {{ invoice.balance|floatformat:2 }} {{ invoice.items.first.currency }}</p>
+    <p><strong>Mokėti:</strong> {{ invoice.payable_amount|floatformat:2 }} {{ invoice.items.first.currency }}</p>
+{% endblock %}
+
+{% block footer %}
+<footer>
+    <div class="card border-0">
+        <div class="card-header">
+            <strong>Pastabos:</strong>
+        </div>
+        <div class="card-body">
+            <ol>
+{% for item_data in items_with_footnotes %}
+    {% if item_data.footnote_number %}
+        <li>{{ item_data.item.period_tax.tax_type.description }}</li>
+    {% endif %}
+{% endfor %}
+</ol>
+        </div>
+    </div>
+</footer>
+{% endblock %}

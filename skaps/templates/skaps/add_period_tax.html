@@ -1,0 +1,33 @@
+{% extends "skaps/base.html" %}
+{% block title %}Add Period Tax{% endblock %}
+{% block content %}
+<h2>Add Period Tax for {{ association.name }}</h2>
+
+<form method="post" class="mt-3">
+    {% csrf_token %}
+
+    <!-- Period + Add Period mygtukas vienoje eilutėje -->
+    <div class="mb-3">
+        <label for="id_period" class="form-label">Period</label>
+        <div class="input-group">
+            {{ form.period }}
+            <a href="{% url 'add_period' %}" class="btn btn-outline-primary">Add Period</a>
+        </div>
+    </div>
+
+    <!-- Tax Type -->
+    <div class="mb-3">
+        <label for="id_tax_type" class="form-label">Tax Type</label>
+        {{ form.tax_type }}
+    </div>
+
+    <!-- Amount -->
+    <div class="mb-3">
+        <label for="id_amount" class="form-label">Amount</label>
+        {{ form.amount }}
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="{% url 'period_taxes' association.id %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

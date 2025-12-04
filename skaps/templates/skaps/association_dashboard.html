@@ -1,0 +1,18 @@
+{% extends "skaps/base.html" %}
+{% block title %}{{ association.name }} Dashboard{% endblock %}
+{% block content %}
+    <div class="mt-4">
+        <a href="{% url 'customers_list' association.id %}" class="btn btn-primary">View Customers</a>
+        <a href="{% url 'association_taxes' association.id %}" class="btn btn-secondary">View Tax Types</a>
+        <a href="{% url 'period_taxes' association.id %}" class="btn btn-info">View Period Taxes</a>
+        <a href="{% url 'add_period_tax' association.id %}" class="btn btn-success">Add Period Tax</a>
+    </div>
+<h2>{{ association.name }}</h2>
+<p>{{ association.description }}</p>
+
+<div class="list-group">
+    <a href="{% url 'customers_list' association.id %}" class="list-group-item list-group-item-action">Customers</a>
+    <a href="{% url 'meter_readings' association.id %}" class="list-group-item list-group-item-action">Meter Readings</a>
+    <a href="{% url 'association_taxes' association.id %}" class="list-group-item list-group-item-action">Taxes</a>
+</div>
+{% endblock %}

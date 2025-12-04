@@ -1,0 +1,17 @@
+{% extends "skaps/base.html" %}
+{% block title %}Home - SimpleCode{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="mb-4">Welcome to SimpleCode</h1>
+    <p class="lead">Skaitiklių apskaita ir bendrijų mokesčių valdymas.</p>
+
+    {% if association %}
+        <a href="{% url 'associations_list' %}" class="btn btn-primary">View associations</a>
+    {% else %}
+        <a href="{% url 'associations_list' %}" class="btn btn-primary">View associations</a>
+        <p class="text-muted">No associations created yet.</p>
+    {% endif %}
+
+</div>
+{% endblock %}
